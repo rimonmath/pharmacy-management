@@ -6,12 +6,21 @@
         <h2>User Login</h2>
       </div>
 
-      <form action="#">
+      <form action="#" @submit.prevent="handleSubmit">
         <label class="block">Email</label>
-        <input type="email" placeholder="Enter your email" />
+        <input
+          type="email"
+          placeholder="Enter your email"
+          v-model="formData.email"
+        />
 
         <label class="block mt-3">Password</label>
-        <input type="password" placeholder="Enter password" />
+        <input
+          type="password"
+          placeholder="Enter password"
+          v-model="formData.password"
+          required
+        />
 
         <button type="submit" class="w-100 mt-3">Login</button>
 
@@ -32,7 +41,31 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => ({
+    formData: {
+      email: "",
+      password: ""
+    }
+  }),
+  methods: {
+    handleSubmit() {
+      if (!this.formData.email) {
+        alert("Email can not be empty!");
+        // TODO: show error message on toast
+        return;
+      }
+      if (this.formData.password.length < 6) {
+        alert("Password must be at least 6 characters long!");
+        // TODO: show error message on toast
+        return;
+      }
+
+      // TODO: Call API
+      console.log(this.formData);
+    }
+  }
+};
 </script>
 
 <style>
