@@ -12,6 +12,8 @@
           type="email"
           placeholder="Enter your email"
           v-model="formData.email"
+          required
+          ref="email"
         />
 
         <label class="block mt-3">Password</label>
@@ -20,6 +22,7 @@
           placeholder="Enter password"
           v-model="formData.password"
           required
+          ref="password"
         />
 
         <button type="submit" class="w-100 mt-3">Login</button>
@@ -51,13 +54,27 @@ export default {
   methods: {
     handleSubmit() {
       if (!this.formData.email) {
-        alert("Email can not be empty!");
         // TODO: show error message on toast
+
+        this.$eventBus.emit("toast", {
+          type: "Error",
+          message: "Email can not be empty!"
+        });
+        this.$refs.email.focus();
+
         return;
       }
       if (this.formData.password.length < 6) {
-        alert("Password must be at least 6 characters long!");
+        // alert("Password must be at least 6 characters long!");
         // TODO: show error message on toast
+
+        this.$eventBus.emit("toast", {
+          type: "Error",
+          message: "Password must be at least 6 characters long!"
+        });
+
+        this.$refs.password.focus();
+
         return;
       }
 
