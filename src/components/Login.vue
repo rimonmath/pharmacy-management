@@ -1,6 +1,17 @@
 <template>
   <div class="login-page">
     <div class="login-card">
+      <!-- <div class="box" :class="{ 'box--right': movedToRight }"></div>
+
+      <button @click="movedToRight = false">Move Left</button>
+      <button class="ml-4" @click="movedToRight = true">Move Right</button>
+      <hr class="mt-4" /> -->
+      <Transition name="showhide">
+        <div class="box1 mt-4" v-if="showing"></div>
+      </Transition>
+
+      <button @click="showing = !showing">Show / Hide</button>
+
       <div class="text-center">
         <img src="/img/lock.png" class="login-card__icon" alt="" />
         <h2>User Login</h2>
@@ -49,7 +60,9 @@ export default {
     formData: {
       email: "",
       password: ""
-    }
+    },
+    movedToRight: false,
+    showing: false
   }),
   methods: {
     handleSubmit() {
@@ -86,6 +99,26 @@ export default {
 </script>
 
 <style>
+.box {
+  width: 55px;
+  height: 55px;
+  background-color: greenyellow;
+  margin-bottom: 22px;
+  transition: all 0.5s;
+}
+
+.box--right {
+  margin-left: 222px;
+}
+
+.box1 {
+  width: 55px;
+  height: 55px;
+  background-color: greenyellow;
+  margin-bottom: 22px;
+  /* animation: showhide 1s ease-in; */
+}
+
 .login-page {
   position: fixed;
   top: 0;
@@ -115,5 +148,50 @@ export default {
 
 .login-card__icon {
   max-width: 77px;
+}
+
+@keyframes showhide {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.showhide-enter-active {
+  animation: showhide 1s ease-in;
+  /* transition: all 0.5s; */
+}
+.showhide-enter-from {
+  /* opacity: 0;
+  transform: scale(0.5); */
+}
+
+.showhide-enter-to {
+  /* opacity: 1;
+  transform: scale(1); */
+}
+
+.showhide-leave-active {
+  animation: showhide 1s ease-in reverse;
+  /* transition: all 0.5s; */
+}
+.showhide-leave-from {
+  /* opacity: 1;
+  transform: scale(1); */
+}
+
+.showhide-leave-to {
+  /* opacity: 0;
+  transform: scale(0.5); */
 }
 </style>
