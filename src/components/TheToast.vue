@@ -34,7 +34,6 @@ export default {
   background-color: #fff;
   border-radius: 2px;
   color: green;
-  transition: all 1s ease;
 }
 
 .toast__Error {

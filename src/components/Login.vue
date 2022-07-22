@@ -6,11 +6,11 @@
       <button @click="movedToRight = false">Move Left</button>
       <button class="ml-4" @click="movedToRight = true">Move Right</button>
       <hr class="mt-4" /> -->
-      <Transition name="showhide">
+      <!-- <Transition name="showhide">
         <div class="box1 mt-4" v-if="showing"></div>
       </Transition>
 
-      <button @click="showing = !showing">Show / Hide</button>
+      <button @click="showing = !showing">Show / Hide</button> -->
 
       <div class="text-center">
         <img src="/img/lock.png" class="login-card__icon" alt="" />
