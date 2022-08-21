@@ -18,13 +18,13 @@
       </div>
 
       <form action="#" @submit.prevent="handleSubmit">
-        <label class="block">Email</label>
+        <label class="block">Username</label>
         <input
-          type="email"
-          placeholder="Enter your email"
-          v-model="formData.email"
+          type="text"
+          placeholder="Enter your username"
+          v-model="formData.username"
           required
-          ref="email"
+          ref="username"
         />
 
         <label class="block mt-3">Password</label>
@@ -36,7 +36,8 @@
           ref="password"
         />
 
-        <button type="submit" class="w-100 mt-3">Login</button>
+        <p class="text-center mt-3" v-if="loggingIn">Logging in...</p>
+        <button type="submit" class="w-100 mt-3" v-else>Login</button>
 
         <div class="d-flex jc-between mt-3">
           <div>
@@ -55,25 +56,28 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data: () => ({
     formData: {
-      email: "",
+      username: "",
       password: ""
     },
+    loggingIn: false,
     movedToRight: false,
     showing: false
   }),
   methods: {
     handleSubmit() {
-      if (!this.formData.email) {
+      if (!this.formData.username) {
         // TODO: show error message on toast
 
         this.$eventBus.emit("toast", {
           type: "Error",
-          message: "Email can not be empty!"
+          message: "username can not be empty!"
         });
-        this.$refs.email.focus();
+        this.$refs.username.focus();
 
         return;
       }
@@ -91,9 +95,65 @@ export default {
         return;
       }
 
-      // TODO: Call API
-      console.log(this.formData);
+      // this.loggingIn = true;
+      // axios
+      //   .post(
+      //     "https://api.rimoned.com/api/pharmacy-management/v1/login",
+      //     this.formData
+      //   )
+      //   .then((res) => {
+      //     console.log(res.data);
+      //     this.$eventBus.emit("toast", {
+      //       type: "Success",
+      //       message: res.data.message
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     let errorMessage = "Something went wrong!";
+      //     if (err.response) {
+      //       errorMessage = err.response.data.message;
+      //     }
+
+      //     this.$eventBus.emit("toast", {
+      //       type: "Error",
+      //       message: errorMessage
+      //     });
+      //   })
+      //   .finally(() => {
+      //     this.loggingIn = false;
+      //   });
+
+      // this.loggingIn = true;
+      // axio.post(
+      //   "https://api.rimoned.com/api/pharmacy-management/v1/login",
+      //   this.formData
+      // )
+      //   .then((res) => {
+      //     console.log(res.data);
+      //     this.$eventBus.emit("toast", {
+      //       type: "Success",
+      //       message: res.data.message
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     let errorMessage = "Something went wrong!";
+      //     if (err.response) {
+      //       errorMessage = err.response.data.message;
+      //     }
+
+      //     this.$eventBus.emit("toast", {
+      //       type: "Error",
+      //       message: errorMessage
+      //     });
+      //   })
+      //   .finally(() => {
+      //     this.loggingIn = false;
+      //   });
     }
+
+    // addTwoNumbers(a, b) {
+    //   return a + b;
+    // }
   }
 };
 </script>
@@ -141,7 +201,7 @@ export default {
   padding: 44px 33px;
 }
 
-.login-card input[type="email"],
+.login-card input[type="text"],
 .login-card input[type="password"] {
   width: 100%;
 }

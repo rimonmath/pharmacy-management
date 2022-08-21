@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Login from "./components/Login.vue";
 import TheToast from "./components/TheToast.vue";
 

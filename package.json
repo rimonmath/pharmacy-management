@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "ayoflex": "^1.0.1",
     "mitt": "^3.0.0",
     "sass": "^1.50.0",
