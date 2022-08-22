@@ -36,8 +36,11 @@
           ref="password"
         />
 
-        <p class="text-center mt-3" v-if="loggingIn">Logging in...</p>
-        <button type="submit" class="w-100 mt-3" v-else>Login</button>
+        <!-- <p class="text-center mt-3" v-if="loggingIn">Logging in...</p> -->
+        <!-- <button type="submit" class="w-100 mt-3" v-else>Login</button> -->
+        <TheButton :block="true" :loading="loggingIn" class="mt-3">
+          Login
+        </TheButton>
 
         <div class="d-flex jc-between mt-3">
           <div>
@@ -58,6 +61,8 @@
 <script>
 import axios from "axios";
 
+import TheButton from "../components/TheButton.vue";
+
 export default {
   data: () => ({
     formData: {
@@ -68,6 +73,9 @@ export default {
     movedToRight: false,
     showing: false
   }),
+  components: {
+    TheButton
+  },
   methods: {
     handleSubmit() {
       if (!this.formData.username) {
@@ -95,65 +103,34 @@ export default {
         return;
       }
 
-      // this.loggingIn = true;
-      // axios
-      //   .post(
-      //     "https://api.rimoned.com/api/pharmacy-management/v1/login",
-      //     this.formData
-      //   )
-      //   .then((res) => {
-      //     console.log(res.data);
-      //     this.$eventBus.emit("toast", {
-      //       type: "Success",
-      //       message: res.data.message
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     let errorMessage = "Something went wrong!";
-      //     if (err.response) {
-      //       errorMessage = err.response.data.message;
-      //     }
+      this.loggingIn = true;
+      axios
+        .post(
+          "https://api.rimoned.com/api/pharmacy-management/v1/login",
+          this.formData
+        )
+        .then((res) => {
+          console.log(res.data);
+          this.$eventBus.emit("toast", {
+            type: "Success",
+            message: res.data.message
+          });
+        })
+        .catch((err) => {
+          let errorMessage = "Something went wrong!";
+          if (err.response) {
+            errorMessage = err.response.data.message;
+          }
 
-      //     this.$eventBus.emit("toast", {
-      //       type: "Error",
-      //       message: errorMessage
-      //     });
-      //   })
-      //   .finally(() => {
-      //     this.loggingIn = false;
-      //   });
-
-      // this.loggingIn = true;
-      // axio.post(
-      //   "https://api.rimoned.com/api/pharmacy-management/v1/login",
-      //   this.formData
-      // )
-      //   .then((res) => {
-      //     console.log(res.data);
-      //     this.$eventBus.emit("toast", {
-      //       type: "Success",
-      //       message: res.data.message
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     let errorMessage = "Something went wrong!";
-      //     if (err.response) {
-      //       errorMessage = err.response.data.message;
-      //     }
-
-      //     this.$eventBus.emit("toast", {
-      //       type: "Error",
-      //       message: errorMessage
-      //     });
-      //   })
-      //   .finally(() => {
-      //     this.loggingIn = false;
-      //   });
+          this.$eventBus.emit("toast", {
+            type: "Error",
+            message: errorMessage
+          });
+        })
+        .finally(() => {
+          this.loggingIn = false;
+        });
     }
-
-    // addTwoNumbers(a, b) {
-    //   return a + b;
-    // }
   }
 };
 </script>

@@ -18,7 +18,6 @@ body {
   text-shadow: 0 1px 0 rgb(255 255 255);
 }
 
-
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -44,28 +43,9 @@ select {
   width: 100%;
 }
 
-
 .border {
   min-height: 11px;
   border: 1px solid var(--brand-color);
-}
-
-
-button {
-  padding: 9px 22px;
-  font-size: 15px;
-  background-color: var(--brand-color);
-  border: 1px solid var(--brand-color);
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 2px 1px #afafaf;
-  border-radius: 3px;
-}
-
-button:hover {
-  color: #ffdac8;
-  background: #000;
-  box-shadow: 0 2px 3px 2px #afafaf;
 }
 
 button.cancel {
