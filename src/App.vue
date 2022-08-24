@@ -1,5 +1,5 @@
 <template>
-  <login></login>
+  <router-view></router-view>
 
   <!-- <div class="toasts"> -->
   <TransitionGroup name="slide-left" tag="div" class="toasts">
@@ -15,7 +15,6 @@
 
 <script>
 import axios from "axios";
-import Login from "./components/Login.vue";
 import TheToast from "./components/TheToast.vue";
 
 export default {
@@ -32,7 +31,6 @@ export default {
     ]
   }),
   components: {
-    Login,
     TheToast
   },
   mounted() {

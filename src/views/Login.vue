@@ -115,6 +115,8 @@ export default {
             type: "Success",
             message: res.data.message
           });
+          localStorage.setItem("accessToken", res.data.accessToken);
+          this.$router.push("/dashboard");
         })
         .catch((err) => {
           let errorMessage = "Something went wrong!";
