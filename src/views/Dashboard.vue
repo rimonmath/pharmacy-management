@@ -1,19 +1,27 @@
 <template>
   <div class="dashboard">
     <div class="dashboard__left">
-      <!-- <TheSidebar></TheSidebar> -->
+      <TheSidebar></TheSidebar>
     </div>
     <div class="dashboard__right">
       <div class="dashboard__top">
-        <!-- <TheHeader></TheHeader> -->
+        <TheHeader></TheHeader>
       </div>
-
-      <div class="dashboard__main">
-        <!-- <router-view></router-view> -->
-      </div>
+      <div class="dashboard__main"></div>
     </div>
   </div>
 </template>
+
+<script>
+import TheSidebar from "../components/TheSidebar.vue";
+import TheHeader from "../components/TheHeader.vue";
+export default {
+  components: {
+    TheSidebar,
+    TheHeader
+  }
+};
+</script>
 
 <style>
 .dashboard {
