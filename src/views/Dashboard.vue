@@ -1,12 +1,23 @@
 <template>
   <div class="dashboard">
-    <div class="dashboard__left"></div>
+    <div class="dashboard__left">
+      <TheSidebar></TheSidebar>
+    </div>
     <div class="dashboard__right">
       <div class="dashboard__top"></div>
       <div class="dashboard__main"></div>
     </div>
   </div>
 </template>
+
+<script>
+import TheSidebar from "../components/TheSidebar.vue";
+export default {
+  components: {
+    TheSidebar
+  }
+};
+</script>
 
 <style>
 .dashboard {
