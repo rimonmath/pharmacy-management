@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginPage from "../views/Login.vue";
 import DashboardPage from "../views/Dashboard.vue";
+
 const Overview = () => import("../views/dashboard/Overview.vue");
 const Drugs = () => import("../views/dashboard/Drugs.vue");
 const Vendors = () => import("../views/dashboard/Vendors.vue");
