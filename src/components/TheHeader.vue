@@ -1,19 +1,13 @@
 <template>
   <div class="the-header">
     <div>
-      <input
-        type="text"
-        placeholder="Search.."
-        class="ml-7 the-header__search"
-      />
+      <input type="text" class="the-header__search" placeholder="Search..." />
     </div>
     <div class="avatar-wrapper">
       <div class="avatar">T</div>
     </div>
   </div>
 </template>
-
-<script></script>
 
 <style>
 .the-header {
