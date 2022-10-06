@@ -18,13 +18,25 @@
         <td>
           {{ vendor.name }}
         </td>
-        <td>{{ vendor.descpition }}</td>
+        <td>{{ vendor.description }}</td>
         <td>
-          <img src="/img/edit.png" alt="" class="action-icon" />
+          <img
+            src="/img/edit.png"
+            alt=""
+            class="action-icon"
+            @click="
+              selectedVendor = vendor;
+              editModal = true;
+            "
+          />
           <img
             src="/img/trash.png"
             alt=""
             class="action-icon action-icon--delete ml-3"
+            @click="
+              selectedVendor = vendor;
+              deleteModal = true;
+            "
           />
         </td>
       </tr>
@@ -54,6 +66,46 @@
       <the-button :loading="adding" class="w-100 mt-4"> Add </the-button>
     </form>
   </TheModal>
+
+  <TheModal v-model="editModal" heading="Edit Vendor">
+    <form @submit.prevent="editVendor">
+      <label class="block">Vendor Name</label>
+      <input
+        type="text"
+        placeholder="Enter vendor name"
+        class="mt-1 w-100"
+        required
+        v-model="selectedVendor.name"
+      />
+
+      <label class="block mt-3">Description</label>
+      <input
+        type="text"
+        placeholder="Write short description"
+        class="mt-1 w-100"
+        required
+        v-model="selectedVendor.description"
+      />
+
+      <the-button :loading="editing" class="w-100 mt-4">
+        Save changes
+      </the-button>
+    </form>
+  </TheModal>
+
+  <TheModal v-model="deleteModal" heading="Are you sure?">
+    <p>
+      Do you really want to delete
+      <strong>{{ selectedVendor.name }}?.</strong>
+    </p>
+
+    <TheButton class="mt-4" :loading="deleting" @click="deleteVendor"
+      >Yes</TheButton
+    >
+    <TheButton @click="deleteModal = false" class="ml-4" color="gray">
+      No
+    </TheButton>
+  </TheModal>
 </template>
 
 <script>
@@ -64,13 +116,18 @@ import TheModal from "../../components/TheModal.vue";
 export default {
   data: () => ({
     addModal: false,
+    deleteModal: false,
+    editModal: false,
     newVendor: {
       name: "",
       description: ""
     },
     adding: false,
     vendors: [],
-    gettingVendors: false
+    gettingVendors: false,
+    selectedVendor: {},
+    deleting: false,
+    editing: false
   }),
   components: {
     TheButton,
@@ -136,6 +193,7 @@ export default {
 
           this.addModal = false;
           this.resetForm();
+          this.getAllVendors();
         })
         .catch((err) => {
           let errorMessage = "Something went wrong!";
@@ -150,6 +208,81 @@ export default {
         })
         .finally(() => {
           this.adding = false;
+        });
+    },
+    deleteVendor() {
+      this.deleting = true;
+      axios
+        .delete(
+          "http://localhost:3009/api/pharmacy-management/v1/private/vendor/" +
+            this.selectedVendor._id,
+
+          {
+            headers: {
+              authorization: localStorage.getItem("accessToken")
+            }
+          }
+        )
+        .then((res) => {
+          this.$eventBus.emit("toast", {
+            type: "Success",
+            message: res.data.message
+          });
+
+          this.deleteModal = false;
+          this.getAllVendors();
+        })
+        .catch((err) => {
+          let errorMessage = "Something went wrong!";
+          if (err.response) {
+            errorMessage = err.response.data.message;
+          }
+
+          this.$eventBus.emit("toast", {
+            type: "Error",
+            message: errorMessage
+          });
+        })
+        .finally(() => {
+          this.deleting = false;
+        });
+    },
+    editVendor() {
+      this.editing = true;
+      axios
+        .put(
+          "http://localhost:3009/api/pharmacy-management/v1/private/vendor/" +
+            this.selectedVendor._id,
+          this.selectedVendor,
+
+          {
+            headers: {
+              authorization: localStorage.getItem("accessToken")
+            }
+          }
+        )
+        .then((res) => {
+          this.$eventBus.emit("toast", {
+            type: "Success",
+            message: res.data.message
+          });
+
+          this.editModal = false;
+          // this.getAllVendors();
+        })
+        .catch((err) => {
+          let errorMessage = "Something went wrong!";
+          if (err.response) {
+            errorMessage = err.response.data.message;
+          }
+
+          this.$eventBus.emit("toast", {
+            type: "Error",
+            message: errorMessage
+          });
+        })
+        .finally(() => {
+          this.editing = false;
         });
     }
   }
