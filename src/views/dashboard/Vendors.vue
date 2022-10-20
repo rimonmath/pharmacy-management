@@ -110,8 +110,10 @@
 
 <script>
 import axios from "axios";
+import privateService from "../../services/privateService";
 import TheButton from "../../components/TheButton.vue";
 import TheModal from "../../components/TheModal.vue";
+import { showErrorMessage, showSuccessMessage } from "../../utils/functions";
 
 export default {
   data: () => ({
@@ -136,7 +138,7 @@ export default {
   },
 
   mounted() {
-    this.getAllVendors();
+    setTimeout(this.getAllVendors, 111);
   },
   methods: {
     resetForm() {
@@ -144,29 +146,13 @@ export default {
     },
     getAllVendors() {
       this.gettingVendors = true;
-      axios
-        .get(
-          "https://api.rimoned.com/api/pharmacy-management/v1/private/vendor",
-
-          {
-            headers: {
-              authorization: localStorage.getItem("accessToken")
-            }
-          }
-        )
+      privateService
+        .getVendors()
         .then((res) => {
           this.vendors = res.data;
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.gettingVendors = false;
@@ -174,38 +160,16 @@ export default {
     },
     addNew() {
       // console.log(localStorage.getItem("accessToken"));
-      this.adding = true;
-      axios
-        .post(
-          "https://api.rimoned.com/api/pharmacy-management/v1/private/vendor",
-          this.newVendor,
-          {
-            headers: {
-              authorization: localStorage.getItem("accessToken")
-            }
-          }
-        )
+      privateService
+        .addVendor(this.newVendor)
         .then((res) => {
-          console.log(res.data);
-          this.$eventBus.emit("toast", {
-            type: "Success",
-            message: res.data.message
-          });
-
+          showSuccessMessage(res);
           this.addModal = false;
           this.resetForm();
           this.getAllVendors();
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.adding = false;
@@ -213,37 +177,15 @@ export default {
     },
     deleteVendor() {
       this.deleting = true;
-      axios
-        .delete(
-          "https://api.rimoned.com/api/pharmacy-management/v1/private/vendor/" +
-            this.selectedVendor._id,
-
-          {
-            headers: {
-              authorization: localStorage.getItem("accessToken")
-            }
-          }
-        )
+      privateService
+        .deleteVendor(this.selectedVendor._id)
         .then((res) => {
-          console.log(res.data);
-          this.$eventBus.emit("toast", {
-            type: "Success",
-            message: res.data.message
-          });
-
+          showSuccessMessage(res);
           this.deleteModal = false;
           this.getAllVendors();
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.deleting = false;
@@ -251,37 +193,14 @@ export default {
     },
     editVendor() {
       this.editing = true;
-      axios
-        .put(
-          "https://api.rimoned.com/api/pharmacy-management/v1/private/vendor/" +
-            this.selectedVendor._id,
-          this.selectedVendor,
-
-          {
-            headers: {
-              authorization: localStorage.getItem("accessToken")
-            }
-          }
-        )
+      privateService
+        .updateVendor(this.selectedVendor)
         .then((res) => {
-          console.log(res.data);
-          this.$eventBus.emit("toast", {
-            type: "Success",
-            message: res.data.message
-          });
-
+          showSuccessMessage(res);
           this.editModal = false;
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.editing = false;

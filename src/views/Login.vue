@@ -59,8 +59,9 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import publicService from "../services/publicService";
+import { updatePrivateHeaders } from "../services/axiosInstances";
+import { showSuccessMessage, showErrorMessage } from "../utils/functions";
 import TheButton from "../components/TheButton.vue";
 
 export default {
@@ -104,30 +105,17 @@ export default {
       }
 
       this.loggingIn = true;
-      axios
-        .post(
-          "https://api.rimoned.com/api/pharmacy-management/v1/login",
-          this.formData
-        )
+
+      publicService
+        .login(this.formData)
         .then((res) => {
-          console.log(res.data);
-          this.$eventBus.emit("toast", {
-            type: "Success",
-            message: res.data.message
-          });
+          showSuccessMessage(res);
           localStorage.setItem("accessToken", res.data.accessToken);
+          updatePrivateHeaders();
           this.$router.push("/dashboard");
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.loggingIn = false;
