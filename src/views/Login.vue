@@ -60,6 +60,9 @@
 
 <script>
 import axios from "axios";
+import { eventBus } from "../utils/eventBus";
+import { setPrivateHeaders } from "../service/axiosInstance";
+import { showErrorMessage, showSuccessMessage } from "../utils/functions";
 
 import TheButton from "../components/TheButton.vue";
 
@@ -81,23 +84,14 @@ export default {
       if (!this.formData.username) {
         // TODO: show error message on toast
 
-        this.$eventBus.emit("toast", {
-          type: "Error",
-          message: "username can not be empty!"
-        });
+        showErrorMessage("username can not be empty!");
         this.$refs.username.focus();
-
         return;
       }
       if (this.formData.password.length < 6) {
         // alert("Password must be at least 6 characters long!");
         // TODO: show error message on toast
-
-        this.$eventBus.emit("toast", {
-          type: "Error",
-          message: "Password must be at least 6 characters long!"
-        });
-
+        showErrorMessage("Password must be at least 6 characters long!");
         this.$refs.password.focus();
 
         return;
@@ -110,24 +104,13 @@ export default {
           this.formData
         )
         .then((res) => {
-          console.log(res.data);
-          this.$eventBus.emit("toast", {
-            type: "Success",
-            message: res.data.message
-          });
+          showSuccessMessage(res);
           localStorage.setItem("accessToken", res.data.accessToken);
+          setPrivateHeaders();
           this.$router.push("/dashboard");
         })
         .catch((err) => {
-          let errorMessage = "Something went wrong!";
-          if (err.response) {
-            errorMessage = err.response.data.message;
-          }
-
-          this.$eventBus.emit("toast", {
-            type: "Error",
-            message: errorMessage
-          });
+          showErrorMessage(err);
         })
         .finally(() => {
           this.loggingIn = false;

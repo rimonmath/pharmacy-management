@@ -16,6 +16,7 @@
 <script>
 import axios from "axios";
 import TheToast from "./components/TheToast.vue";
+import { eventBus } from "./utils/eventBus";
 
 export default {
   data: () => ({
@@ -34,7 +35,7 @@ export default {
     TheToast
   },
   mounted() {
-    this.$eventBus.on("toast", (data) => {
+    eventBus.on("toast", (data) => {
       // console.log(data);
       this.toasts.push(data);
       this.removeOneToast();
