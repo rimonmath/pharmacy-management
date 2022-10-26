@@ -12,6 +12,22 @@ export const axiosPrivate = axios.create({
   timeout: 60000
 });
 
+axiosPrivate.interceptors.response.use(
+  function (response) {
+    // Do something with response data
+    return response;
+  },
+  function (error) {
+    console.log(error);
+    // Do something with response error
+    if (error.response && error.response.status == 401) {
+      localStorage.removeItem("accessToken");
+      location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const setPrivateHeaders = () => {
   axiosPrivate.defaults.headers.common["authorization"] =
     localStorage.getItem("accessToken");

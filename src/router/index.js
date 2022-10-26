@@ -29,4 +29,12 @@ const router = createRouter({
   history: createWebHistory()
 });
 
+// router.beforeEach((to, from) => {
+//   console.log(to);
+//   console.log(from);
+//   // ...
+//   // explicitly return false to cancel the navigation
+//   // return false
+// });
+
 export default router;

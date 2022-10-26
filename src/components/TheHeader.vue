@@ -4,10 +4,41 @@
       <input type="text" class="the-header__search" placeholder="Search..." />
     </div>
     <div class="avatar-wrapper">
-      <div class="avatar">T</div>
+      <div class="avatar" @click="showAvatar = !showAvatar">T</div>
+      <div class="avatar__overflow" v-show="showAvatar">
+        <div class="avatar__overflow-title">test@gmail.com</div>
+        <router-link to="/dashboard/settings/account">
+          <div
+            class="avatar__overflow-link mt-2"
+            @click="
+              showAvatar = false;
+              $router.push('/dashboard/settings');
+            "
+          >
+            Settings
+          </div>
+        </router-link>
+        <router-link to="#" @click="logout">
+          <div class="avatar__overflow-link mb-2">Logout</div>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data: () => ({
+    showAvatar: false
+  }),
+  methods: {
+    logout() {
+      localStorage.removeItem("accessToken");
+      location.href = "/";
+    }
+  }
+};
+</script>
 
 <style>
 .the-header {
@@ -42,5 +73,39 @@
   align-items: center;
   color: #fff;
   cursor: pointer;
+}
+
+.avatar__overflow {
+  position: absolute;
+  right: -8px;
+  top: 50px;
+  width: 186px;
+  background: #fff;
+  box-shadow: 0px 8px 6px 4px rgb(0 0 0 / 20%);
+  min-height: 111px;
+  z-index: 9999;
+  border-radius: 0 0 3px 3px;
+}
+
+.avatar__overflow a {
+  text-decoration: none;
+}
+
+.avatar__overflow-title {
+  padding: 3px 9px;
+  background-color: #ffecec;
+  text-align: center;
+}
+
+.avatar__overflow-link {
+  width: 100%;
+  cursor: pointer;
+  padding: 5px 15px;
+  font-size: 16px;
+  color: #000;
+}
+
+.avatar__overflow-link:hover {
+  background-color: rgb(241, 241, 241);
 }
 </style>
