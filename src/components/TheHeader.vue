@@ -1,7 +1,34 @@
 <template>
   <div class="the-header">
-    <div>
-      <input type="text" class="the-header__search" placeholder="Search..." />
+    <div class="p-relative ml-7">
+      <input
+        type="text"
+        class="the-header__search"
+        placeholder="Search..."
+        @focus="searchFocused = true"
+        @blur="searchFocused = false"
+        v-model="searchString"
+      />
+
+      <div class="search-results" v-show="searchFocused">
+        <table>
+          <tr
+            class="result-item"
+            v-for="drug in drugs"
+            :key="drug.name"
+            @click="
+              selectedDrug = drug;
+              detailsModal = true;
+              searchString = '';
+            "
+          >
+            <td>{{ drug.name }}</td>
+            <td>{{ drug.weight }}</td>
+            <td>{{ drug.vendor }}</td>
+            <td>{{ drug.quantity }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div class="avatar-wrapper">
       <div class="avatar" @click="showAvatar = !showAvatar">T</div>
@@ -27,14 +54,43 @@
 </template>
 
 <script>
+import privateService from "../service/privateService";
 export default {
   data: () => ({
-    showAvatar: false
+    showAvatar: false,
+    searchString: "",
+    drugs: [],
+    searchFocused: false,
+    lastSearchTime: 0
   }),
   methods: {
     logout() {
       localStorage.removeItem("accessToken");
       location.href = "/";
+    },
+    searchDrug(searchString, lastSearchTime) {
+      // console.log(searchString);
+      privateService
+        .searchDrug(searchString)
+        .then((res) => {
+          if (lastSearchTime === this.lastSearchTime) {
+            console.log("UI updated");
+            this.drugs = res.data;
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  },
+  watch: {
+    searchString(newValue) {
+      if (newValue) {
+        this.lastSearchTime = Date.now();
+        this.searchDrug(newValue, this.lastSearchTime);
+      } else {
+        this.drugs = [];
+      }
     }
   }
 };
@@ -107,5 +163,62 @@ export default {
 
 .avatar__overflow-link:hover {
   background-color: rgb(241, 241, 241);
+}
+
+.search-results {
+  background-color: #fff;
+  position: absolute;
+  left: 0;
+  top: 46px;
+  min-height: 111px;
+  max-height: 366px;
+  box-shadow: 0 16px 11px 5px rgb(0 0 0 / 20%);
+  width: 555px;
+  border-radius: 0 0 5px 5px;
+  overflow-y: auto;
+}
+
+.search-results table tr:nth-child(odd) {
+  background-color: rgb(250, 250, 250);
+}
+
+.search-results table tr:nth-child(odd):hover {
+  background-color: rgb(215, 248, 208);
+}
+
+.search-results table tr {
+  cursor: pointer;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(196, 196, 196);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(143, 143, 143);
+}
+
+table.drug-details th {
+  background: none;
+}
+
+table.drug-details tr {
+  background: none;
+}
+
+.p-relative {
+  position: relative;
 }
 </style>
