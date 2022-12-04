@@ -28,7 +28,7 @@ export default {
 <style scoped>
 .toast {
   width: 299px;
-  box-shadow: 0 0 6px 2px #c9c9c9;
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.5);
   min-height: 22px;
   margin: 11px;
   background-color: #fff;
