@@ -13,9 +13,53 @@
         </router-link>
         <router-link to="/dashboard/settings">Setting</router-link>
       </div>
+
+      <hr />
+
+      {{ projectName }} <br />
+      visit count: {{ visitCount }} <br />
+      <button @click="handleClick">Count</button>
+
+      <hr />
+      <p>Username: {{ username }}</p>
+      <p>Access Token: {{ accessToken }}</p>
+      <p>Refresh Token: {{ refreshToken }}</p>
+      <button @click="handleLogin">Login</button>
     </div>
   </div>
 </template>
+
+<script>
+import { mapState, mapActions } from "pinia";
+import { useAuthStore } from "../store/authStore";
+import { infoStore } from "../store/info";
+
+export default {
+  data: () => ({
+    projectName: infoStore.projectName,
+    visitCount: infoStore.visitCount
+  }),
+  methods: {
+    ...mapActions(useAuthStore, {
+      login: "login"
+    }),
+    handleClick() {
+      infoStore.visitCount += 1;
+      console.log(infoStore);
+    },
+    handleLogin() {
+      this.login({ username: "mamunur", 'accessToken' });
+    }
+  },
+  computed: {
+    ...mapState(useAuthStore, {
+      username: "username",
+      accessToken: "accessToken",
+      refreshToken: "refreshToken"
+    })
+  }
+};
+</script>
 
 <style>
 .sidebar {
