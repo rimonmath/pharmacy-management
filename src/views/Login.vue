@@ -11,6 +11,7 @@
       </Transition>
 
       <button @click="showing = !showing">Show / Hide</button> -->
+      {{ projectName }}
 
       <div class="text-center">
         <img src="/img/lock.png" class="login-card__icon" alt="" />
@@ -62,6 +63,7 @@
 import axios from "axios";
 import { eventBus } from "../utils/eventBus";
 import { setPrivateHeaders } from "../service/axiosInstance";
+import { infoStore } from "../store/info";
 import { showErrorMessage, showSuccessMessage } from "../utils/functions";
 
 import TheButton from "../components/TheButton.vue";
@@ -74,7 +76,8 @@ export default {
     },
     loggingIn: false,
     movedToRight: false,
-    showing: false
+    showing: false,
+    projectName: infoStore.projectName
   }),
   components: {
     TheButton
