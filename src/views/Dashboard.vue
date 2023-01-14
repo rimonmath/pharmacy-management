@@ -98,8 +98,8 @@ export default {
   position: fixed;
   top: 0;
   bottom: 0;
-  right: -444px;
-  width: 444px;
+  right: -522px;
+  width: 522px;
   box-shadow: 0 0 42px 14px rgb(0 0 0 / 22%);
   z-index: 999999;
   background-color: rgb(255 255 255);

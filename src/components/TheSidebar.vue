@@ -13,10 +13,6 @@
         </router-link>
         <router-link to="/dashboard/settings">Setting</router-link>
       </div>
-
-      <hr />
-      {{ projectName }}
-      VisitCount: {{ visitCount }}
     </div>
   </div>
 </template>
