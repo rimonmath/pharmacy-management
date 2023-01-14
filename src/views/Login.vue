@@ -61,11 +61,12 @@
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "pinia";
 import { eventBus } from "../utils/eventBus";
 import { setPrivateHeaders } from "../service/axiosInstance";
 import { showErrorMessage, showSuccessMessage } from "../utils/functions";
 import { infoStore } from "../data/info";
-
+import { useAuthStore } from "../store/authStore";
 import TheButton from "../components/TheButton.vue";
 
 export default {
@@ -79,10 +80,21 @@ export default {
     showing: false,
     projectName: infoStore.projectName
   }),
+  computed: {
+    ...mapState(useAuthStore, {
+      username: "username",
+      accessToken: "accessToken",
+      refreshToken: "refreshToken",
+      isLoggedIn: "isLoggedIn"
+    })
+  },
   components: {
     TheButton
   },
   methods: {
+    ...mapActions(useAuthStore, {
+      login: "login"
+    }),
     handleSubmit() {
       if (!this.formData.username) {
         // TODO: show error message on toast
@@ -108,6 +120,7 @@ export default {
         )
         .then((res) => {
           showSuccessMessage(res);
+          this.login(res.data);
           localStorage.setItem("accessToken", res.data.accessToken);
           setPrivateHeaders();
           this.$router.push("/dashboard");
