@@ -91,10 +91,13 @@
 </template>
 
 <script>
+import { mapActions } from "pinia";
+import { useCartStore } from "../store/cartStore";
 import TheModal from "./TheModal.vue";
 import TheButton from "./TheButton.vue";
 import privateService from "../service/privateService";
 import { showErrorMessage } from "../utils/functions";
+
 export default {
   data: () => ({
     showAvatar: false,
@@ -111,6 +114,9 @@ export default {
     TheButton
   },
   methods: {
+    ...mapActions(useCartStore, {
+      addToCartStore: "add"
+    }),
     logout() {
       localStorage.removeItem("accessToken");
       location.href = "/";
@@ -142,8 +148,12 @@ export default {
         this.$refs.qtyInput.focus();
       } else {
         console.log("Adding to cart.");
-        this.detailsModal = false;
+
         // TODO: Implement add to cart feature
+        this.addToCartStore({ ...this.selectedDrug, quantity: this.quantity });
+        this.detailsModal = false;
+        this.quantity = 1;
+        this.searchString = "";
       }
     },
     handleBlur() {

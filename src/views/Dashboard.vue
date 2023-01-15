@@ -35,7 +35,7 @@ import { setPrivateHeaders } from "../service/axiosInstance";
 
 export default {
   data: () => ({
-    cartOpened: false
+    cartOpened: true
   }),
   components: {
     TheSidebar,
