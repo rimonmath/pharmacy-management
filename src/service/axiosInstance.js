@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_BAE_URL = "https://api.rimoned.com/api/pharmacy-management/v1";
+// const API_BAE_URL = "http://localhost:3009/api/pharmacy-management/v1";
 
 export const axiosPublic = axios.create({
   baseURL: API_BAE_URL,

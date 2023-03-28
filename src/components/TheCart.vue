@@ -49,20 +49,108 @@
       </tr>
     </table>
 
-    <TheButton class="w-100 mt-4">Checkout</TheButton>
+    <TheButton
+      class="w-100 mt-4"
+      v-if="!enteringCustomerInfo"
+      @click="enteringCustomerInfo = true"
+    >
+      Checkout
+    </TheButton>
+
+    <div v-if="enteringCustomerInfo" class="mt-4">
+      <label for="" class="block">Customer Name</label>
+      <input
+        type="text"
+        placeholder="Enter customer name"
+        v-model="customerName"
+        class="w-100"
+      />
+      <label for="" class="block mt-4">Customer Phone</label>
+      <input
+        type="text"
+        placeholder="Enter customer phone"
+        v-model="customerPhone"
+        class="w-100"
+      />
+      <TheButton class="w-100 mt-4" @click="confirmNow" :loading="confirming">
+        Confirm
+      </TheButton>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "pinia";
 import { useCartStore } from "../store/cartStore";
+import privateService from "../service/privateService";
+import { showErrorMessage, showSuccessMessage } from "../utils/functions";
+
 import TheButton from "./TheButton.vue";
 
 export default {
+  data: () => ({
+    cart: [],
+    customerName: "",
+    customerPhone: "",
+    enteringCustomerInfo: false,
+    checkingOut: false,
+    confirming: false
+  }),
   methods: {
     ...mapActions(useCartStore, {
       removeFromCart: "remove"
-    })
+    }),
+    confirmNow() {
+      const orderData = {
+        customer: this.customerName,
+        phone: this.customerPhone,
+        cartItems: this.cartItems
+      };
+
+      console.log(orderData);
+      this.confirming = true;
+      privateService
+        .sellDrug(orderData)
+        .then((res) => {
+          showSuccessMessage(res);
+          //TODO: reset cart
+          this.customerPhone = "";
+          this.customerName = "";
+          this.enteringCustomerInfo = false;
+          this.$router.push("/dashboard/selling-history");
+        })
+        .catch((err) => {
+          showErrorMessage(err);
+        })
+        .finally(() => {
+          this.confirming = false;
+        });
+
+      // this.confirming = true;
+      // ApiService.updateAllData(newAllData)
+      //   .then((res) => {
+      //     this.allData = res.newDb;
+      //     this.emitter.emit("toast", {
+      //       type: "Success",
+      //       message: "Order placed successfully!"
+      //     });
+      //     this.cart = [];
+      //     this.customerPhone = "";
+      //     this.customerName = "";
+      //     this.enteringCustomerInfo = false;
+      //     this.$router.push("/dashboard/selling-history");
+      //   })
+      //   .catch((e) => {
+      //     this.emitter.emit("toast", {
+      //       type: "Error",
+      //       message: "Something went wrong!"
+      //     });
+      //   })
+      //   .finally(() => {
+      //     this.confirming = false;
+      //     this.$emit("close");
+      //   });
+    }
   },
   computed: {
     ...mapState(useCartStore, {
