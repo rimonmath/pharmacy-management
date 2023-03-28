@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, watch } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 
@@ -17,3 +17,13 @@ app.use(pinia);
 // app.config.globalProperties.$eventBus = eventBus;
 
 app.mount("#app");
+
+watch(
+  () => pinia.state.value.cart,
+  (state) => {
+    // persist the whole state to the local storage whenever it changes
+    localStorage.setItem("products", JSON.stringify(state.products));
+    // console.log(state);
+  },
+  { deep: true }
+);
