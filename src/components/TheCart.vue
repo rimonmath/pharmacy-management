@@ -62,14 +62,14 @@
       <input
         type="text"
         placeholder="Enter customer name"
-        v-model="customerName"
+        v-model="customer"
         class="w-100"
       />
       <label for="" class="block mt-4">Customer Phone</label>
       <input
         type="text"
         placeholder="Enter customer phone"
-        v-model="customerPhone"
+        v-model="phone"
         class="w-100"
       />
       <TheButton class="w-100 mt-4" @click="confirmNow" :loading="confirming">
@@ -89,11 +89,9 @@ import TheButton from "./TheButton.vue";
 
 export default {
   data: () => ({
-    cart: [],
-    customerName: "",
-    customerPhone: "",
+    customer: "",
+    phone: "",
     enteringCustomerInfo: false,
-    checkingOut: false,
     confirming: false
   }),
   methods: {
@@ -102,8 +100,8 @@ export default {
     }),
     confirmNow() {
       const orderData = {
-        customer: this.customerName,
-        phone: this.customerPhone,
+        customer: this.customer,
+        phone: this.phone,
         cartItems: this.cartItems
       };
 
@@ -114,8 +112,8 @@ export default {
         .then((res) => {
           showSuccessMessage(res);
           //TODO: reset cart
-          this.customerPhone = "";
-          this.customerName = "";
+          this.phone = "";
+          this.customer = "";
           this.enteringCustomerInfo = false;
           this.$router.push("/dashboard/selling-history");
         })
@@ -126,30 +124,6 @@ export default {
           this.confirming = false;
         });
 
-      // this.confirming = true;
-      // ApiService.updateAllData(newAllData)
-      //   .then((res) => {
-      //     this.allData = res.newDb;
-      //     this.emitter.emit("toast", {
-      //       type: "Success",
-      //       message: "Order placed successfully!"
-      //     });
-      //     this.cart = [];
-      //     this.customerPhone = "";
-      //     this.customerName = "";
-      //     this.enteringCustomerInfo = false;
-      //     this.$router.push("/dashboard/selling-history");
-      //   })
-      //   .catch((e) => {
-      //     this.emitter.emit("toast", {
-      //       type: "Error",
-      //       message: "Something went wrong!"
-      //     });
-      //   })
-      //   .finally(() => {
-      //     this.confirming = false;
-      //     this.$emit("close");
-      //   });
     }
   },
   computed: {
