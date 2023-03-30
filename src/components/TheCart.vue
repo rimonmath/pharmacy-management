@@ -114,7 +114,7 @@ export default {
           this.phone = "";
           this.customer = "";
           this.enteringCustomerInfo = false;
-          this.$router.push("/dashboard/sellling-history");
+          this.$router.push("/dashboard/selling-history");
         })
         .catch((err) => {
           showErrorMessage(err);
