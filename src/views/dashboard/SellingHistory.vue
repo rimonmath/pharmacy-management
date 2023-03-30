@@ -161,7 +161,7 @@ export default {
           this.getHistory();
         })
         .catch((err) => {
-          showErrorMessage(res);
+          showErrorMessage(err);
         })
         .finally(() => {
           this.deleting = false;
