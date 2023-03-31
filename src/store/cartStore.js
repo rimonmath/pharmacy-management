@@ -28,6 +28,10 @@ export const useCartStore = defineStore("cart", {
 
     remove(id) {
       delete this.products[id];
+    },
+
+    clearCart() {
+      this.products = {};
     }
   }
 });

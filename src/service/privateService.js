@@ -40,5 +40,11 @@ export default {
   },
   sellDrug(payload) {
     return axiosPrivate.post("/private/sell", payload);
+  },
+  getHistory() {
+    return axiosPrivate.get("/private/sell");
+  },
+  deleteHistory(id) {
+    return axiosPrivate.delete("/private/sell/" + id);
   }
 };
