@@ -1,102 +1,105 @@
 <template>
-  <h2>Order History</h2>
+  <div>
+    <h2>Order History</h2>
+    <!-- <ContentLoader v-if="gettingHistory"></ContentLoader> -->
+    <div class="text-center" v-if="gettingHistory">Loading...</div>
 
-  <!-- <ContentLoader v-if="gettingHistory"></ContentLoader> -->
-  <div class="text-center" v-if="gettingHistory">Loading...</div>
+    <table class="mt-4" v-else>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer Name</th>
+        <th>Customer Phone</th>
+        <th>Total Items</th>
+        <th>Action</th>
+      </tr>
 
-  <table class="mt-4" v-else>
-    <tr>
-      <th>Order ID</th>
-      <th>Customer Name</th>
-      <th>Customer Phone</th>
-      <th>Total Items</th>
-      <th>Action</th>
-    </tr>
+      <tr v-for="(orderHistory, i) in history" :key="orderHistory._id">
+        <td>{{ orderHistory._id }}</td>
+        <td>{{ orderHistory.customer }}</td>
+        <td>{{ orderHistory.phone }}</td>
+        <td>{{ Object.keys(orderHistory.cartItems).length }}</td>
+        <td>
+          <img
+            src="/img/eye.png"
+            class="action-icon action-icon--delete ml-3"
+            alt=""
+            @click="
+              selectedOrderHistoryIndex = i;
+              detailsModal = true;
+            "
+          />
+          <img
+            src="/img/trash.png"
+            class="action-icon action-icon--delete ml-3"
+            alt=""
+            @click="
+              selectedOrderHistoryIndex = i;
+              deleteModal = true;
+            "
+          />
+        </td>
+      </tr>
+    </table>
 
-    <tr v-for="(orderHistory, i) in history" :key="orderHistory._id">
-      <td>{{ orderHistory._id }}</td>
-      <td>{{ orderHistory.customer }}</td>
-      <td>{{ orderHistory.phone }}</td>
-      <td>{{ Object.keys(orderHistory.cartItems).length }}</td>
-      <td>
-        <img
-          src="/img/eye.png"
-          class="action-icon action-icon--delete ml-3"
-          alt=""
-          @click="
-            selectedOrderHistoryIndex = i;
-            detailsModal = true;
-          "
-        />
-        <img
-          src="/img/trash.png"
-          class="action-icon action-icon--delete ml-3"
-          alt=""
-          @click="
-            selectedOrderHistoryIndex = i;
-            deleteModal = true;
-          "
-        />
-      </td>
-    </tr>
-  </table>
+    <TheModal v-model="deleteModal" heading="Are you sure?">
+      <p>Do you really want to delete {{ selectedOrderHistory.customer }}?</p>
+      <div class="mt-3">
+        <TheButton @click="deleteHistory" :loading="deleting">Yes</TheButton>
+        <TheButton color="gray" class="ml-4" @click="deleteModal = false">
+          No
+        </TheButton>
+      </div>
+    </TheModal>
 
-  <TheModal v-model="deleteModal" heading="Are you sure?">
-    <p>Do you really want to delete {{ selectedOrderHistory.customer }}?</p>
-    <div class="mt-3">
-      <TheButton @click="deleteHistory" :loading="deleting">Yes</TheButton>
-      <TheButton color="gray" class="ml-4" @click="deleteModal = false">
-        No
-      </TheButton>
-    </div>
-  </TheModal>
+    <TheModal v-model="detailsModal" heading="Order Details" size="lg">
+      <div class="d-flex jc-between">
+        <div>
+          <strong>Customer: </strong>{{ selectedOrderHistory.customer }}
+        </div>
+        <div><strong>Phone:</strong> {{ selectedOrderHistory.phone }}</div>
+      </div>
+      <h3 class="mt-4 mb-2">Cart Items</h3>
+      <div class="mt-2">
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Weight</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th class="text-right">Total</th>
+          </tr>
+          <tr v-for="item in selectedOrderHistory.cartItems" :key="item.name">
+            <td>
+              {{ item.name }}
+            </td>
+            <td>
+              {{ item.weight }}
+            </td>
+            <td>
+              {{ item.price }}
+            </td>
 
-  <TheModal v-model="detailsModal" heading="Order Details" size="lg">
-    <div class="d-flex jc-between">
-      <div><strong>Customer: </strong>{{ selectedOrderHistory.customer }}</div>
-      <div><strong>Phone:</strong> {{ selectedOrderHistory.phone }}</div>
-    </div>
-    <h3 class="mt-4 mb-2">Cart Items</h3>
-    <div class="mt-2">
-      <table>
-        <tr>
-          <th>Item</th>
-          <th>Weight</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th class="text-right">Total</th>
-        </tr>
-        <tr v-for="item in selectedOrderHistory.cartItems" :key="item.name">
-          <td>
-            {{ item.name }}
-          </td>
-          <td>
-            {{ item.weight }}
-          </td>
-          <td>
-            {{ item.price }}
-          </td>
+            <td>
+              {{ item.quantity }}
+            </td>
 
-          <td>
-            {{ item.quantity }}
-          </td>
+            <td class="text-right">
+              {{ item.quantity * item.price }}
+            </td>
+          </tr>
 
-          <td class="text-right">
-            {{ item.quantity * item.price }}
-          </td>
-        </tr>
-
-        <tr>
-          <td colspan="6">
-            <div class="text-right">
-              <hr />
-              <strong>Grand Total : {{ totalPrice }}</strong>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </TheModal>
+          <tr>
+            <td colspan="6">
+              <div class="text-right">
+                <hr />
+                <strong>Grand Total : {{ totalPrice }}</strong>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </TheModal>
+  </div>
 </template>
 
 <script>
@@ -124,14 +127,17 @@ export default {
 
   computed: {
     selectedOrderHistory() {
-      return this.history[this.selectedOrderHistoryIndex] || {};
+      return this.history[this.selectedOrderHistoryIndex] || { cartItems: {} };
     },
     totalPrice() {
-      return 0;
+      // return 0;
       let tp = 0;
-      this.selectedOrderHistory.cartItems.forEach((element) => {
-        tp += 1; // element.drug.price * element.quantity;
-      });
+
+      for (let key in this.selectedOrderHistory.cartItems) {
+        tp +=
+          this.selectedOrderHistory.cartItems[key].price *
+          this.selectedOrderHistory.cartItems[key].quantity;
+      }
 
       return tp;
     }
