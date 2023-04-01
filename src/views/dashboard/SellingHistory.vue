@@ -39,7 +39,7 @@
       </tr>
     </table>
 
-    <TheModal v-model="detailsModal" heading="Order Details" size="lg">
+    <TheModal v-model="detailsModal" heading="Order Details">
       <div class="d-flex jc-between">
         <div>
           <strong>Customer: </strong>{{ selectedOrderHistory.customer }}
