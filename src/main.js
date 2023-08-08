@@ -27,3 +27,13 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  () => pinia.state.value.theme,
+  (state) => {
+    // persist the whole state to the local storage whenever it changes
+    localStorage.setItem("brandColor", state.brandColor);
+    // console.log(state);
+  },
+  { deep: true }
+);

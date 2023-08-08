@@ -52,12 +52,13 @@ export default {
   cursor: pointer;
   box-shadow: 0 2px 2px 1px #afafaf;
   border-radius: 3px;
+  opacity: 0.9;
 }
 
 .the-button button:hover {
   color: #ffdac8;
-  background: #000;
   box-shadow: 0 2px 3px 2px #afafaf;
+  opacity: 1;
 }
 
 .the-button--block {
