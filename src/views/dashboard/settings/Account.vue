@@ -5,7 +5,7 @@ import TheButton from "../../../components/TheButton.vue";
 
 export default {
   data: () => ({
-    getting: false,
+    getting: true,
     saving: false,
     accountSettings: {
       fullName: "",
