@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginPage from "../views/Login.vue";
+import CompositionPage from "../views/Composition.vue";
 import DashboardPage from "../views/Dashboard.vue";
 
 const Overview = () => import("../views/dashboard/Overview.vue");
@@ -13,6 +14,7 @@ const Theme = () => import("../views/dashboard/settings/Theme.vue");
 
 const routes = [
   { path: "/", component: LoginPage },
+  { path: "/composition", component: CompositionPage },
   {
     path: "/dashboard",
     component: DashboardPage,
@@ -38,7 +40,7 @@ const routes = [
 
 const router = createRouter({
   routes,
-  history: createWebHistory("/pharmacy")
+  history: createWebHistory()
 });
 
 // router.beforeEach((to, from) => {
